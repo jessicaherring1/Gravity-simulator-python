@@ -5,8 +5,6 @@ from Body import Body
 from HandDetector import HandDetector
 import math
 
-import random
-
 
 WIDTH = 1200 #window width
 HEIGHT = 800 #window height
@@ -14,7 +12,7 @@ size = (WIDTH, HEIGHT)
 screen = pygame.display.set_mode(size)
 
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
-bg = pygame.image.load("background.jpg").convert()
+bg = pygame.image.load("background1.jpg").convert()
 bg = pygame.transform.scale(bg, (WIDTH, HEIGHT))
 
 pygame.display.set_caption("Gravity Simulator")

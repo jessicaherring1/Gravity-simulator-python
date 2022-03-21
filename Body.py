@@ -80,7 +80,10 @@ class Body:
         dy = self.py - body2.py # change in two y-positions
         d = math.sqrt(dx**2 + dy**2)
         
-        force = (self.mass * body2.mass) / d**2
+        if d != 0:
+            force = (self.mass * body2.mass) / d**2
+        else:
+            force = 0
         theta = math.atan2(dy,dx)
 
         fx = math.cos(math.radians(theta)) * force
