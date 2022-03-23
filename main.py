@@ -74,8 +74,8 @@ pygame.display.set_caption("Gravity Simulator")
 FPS=60
 
 #Bodies
-planet1 = Body(p1H, p1W, 10, 600, 200, 3, 3)
-planet2 = Body(p2H, p2W, 1000, 600, 400)
+planet1 = Body(p1H, p1W, 10, 600, 200, 2, 2)
+planet2 = Body(p2H, p2W, 1000, 450, 250)
 planet3 = Body(p3H, p3W, 20, 400, 300, 3, 1)
 planet4 = Body(p4H, p4W, 30, 400, 100, 1, 3)
 planet5 = Body(p5H, p5W, 40, 500, 400, 3, 3)
@@ -109,7 +109,7 @@ def main():
     #timers
     startTime = pygame.time.get_ticks()
     endTime = 0
-    interval = 2000
+    interval = 1000
 
     # make a boolean that represents whether the game should continue to run or not
     running = True
@@ -204,7 +204,8 @@ def main():
                             body.py = circleY - (body.h / 2)
 
                     else:
-                        planet1.acceleration(planet2)  #fix
+                        #planet1.acceleration(planet2)  #fix
+                        print(planet1.px)
                         circleC = (0, 255, 255)
                     
                     for body2 in bodies:
@@ -221,10 +222,9 @@ def main():
                                 else:
                                     bodies.remove(body)
                                 '''
-            planet1.acceleration(planet2)
 
 
-
+            planet1.acceleration(planet2)  
             '''
                 planetTop = planet.py - planet.radius
                 planetBottom = planet.py + planet.radius
@@ -270,7 +270,7 @@ def main():
         
         if state == 2:
             if handIsOpen:
-                pygame.time.delay(1000)
+                #delay
                 state = 3
 
         if state == 3:
@@ -281,7 +281,6 @@ def main():
             
 
         if state ==4 and handIsClosed:
-            pygame.time.delay(1000)
             state = 5
         
         if state == 5:

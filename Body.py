@@ -87,14 +87,14 @@ class Body:
             force = (self.mass * body2.mass) / d**2
         else:
             force = 0
-        theta = math.atan2(dy,dx)
+
+        theta = math.atan2(dy,dx) # radians
 
         fx = math.cos(theta) * force
         fy = math.sin(theta) * force
 
-        self.ax = (fx / self.mass) #* -1
-        self.ay = (fy / self.mass) #*-1
-        #print(self.ax, self.ay)
+        self.ax = (fx / self.mass) 
+        self.ay = (fy / self.mass)
         
         self.vx += self.ax 
         self.vy += self.ay 
@@ -103,7 +103,6 @@ class Body:
         
         body2.ax = (fx / body2.mass)*-1
         body2.ay = (fy / body2.mass)*-1
-        #print(body2.ax, body2.ay)
 
         body2.vx += body2.ax
         body2.vy += body2.ay
