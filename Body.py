@@ -25,8 +25,9 @@ class Body:
     leftBound = 0
     rightBound = 0
 
-    def __init__(self, tempr, tempmass, temppx=0, temppy=0, tempvx=0, tempvy=0,):
-        self.radius = tempr
+    def __init__(self, tempH, tempW, tempmass, temppx=0, temppy=0, tempvx=0, tempvy=0,):
+        self.h = tempH
+        self.w = tempW
         self.mass = tempmass
         self.px=temppx
         self.py = temppy
@@ -37,7 +38,7 @@ class Body:
         self.add_body(self)
     
     def render(self, aSurface):
-        pygame.draw.circle(aSurface, (255, 0, 255), (self.px, self.py), self.radius)
+        pygame.draw.circle(aSurface, (255, 0, 255), (self.px, self.py), self.h/2)
     
     def resetBoundaries(self): #incomplete
         self.topBound = self.y
@@ -76,9 +77,11 @@ class Body:
             reverse = -1'''
 
     def acceleration(self, body2):
-        dx = self.px-body2.px # change in two x-positions
-        dy = self.py - body2.py # change in two y-positions
+        dx = body2.px - self.px # change in two x-positions
+        dy = body2.py- self.py # change in two y-positions
         d = math.sqrt(dx**2 + dy**2)
+
+       
         
         if d != 0:
             force = (self.mass * body2.mass) / d**2
@@ -86,11 +89,11 @@ class Body:
             force = 0
         theta = math.atan2(dy,dx)
 
-        fx = math.cos(math.radians(theta)) * force
-        fy = math.sin(math.radians(theta)) * force
+        fx = math.cos(theta) * force
+        fy = math.sin(theta) * force
 
         self.ax = (fx / self.mass) #* -1
-        self.ay = (fy / self.mass)#*-1
+        self.ay = (fy / self.mass) #*-1
         #print(self.ax, self.ay)
         
         self.vx += self.ax 
