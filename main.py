@@ -74,14 +74,14 @@ pygame.display.set_caption("Gravity Simulator")
 FPS=60
 
 #Bodies
-planet1 = Body(p1H, p1W, 10, 600, 200, 2, 2)
-planet2 = Body(p2H, p2W, 1000, 450, 250)
-planet3 = Body(p3H, p3W, 20, 400, 300, 3, 1)
-planet4 = Body(p4H, p4W, 30, 400, 100, 1, 3)
-planet5 = Body(p5H, p5W, 40, 500, 400, 3, 3)
-planet6 = Body(p6H, p6W, 50, 100, 500, 2, 1)
+planet1 = Body(p1H, p1W, 10, 500, 250, 2, 2)
+planet2 = Body(p2H, p2W, 10000, 450, 250)
+planet3 = Body(p3H, p3W, 20, 400, 300, 1, 1)
+planet4 = Body(p4H, p4W, 30, 400, 350, 1, 2)
+planet5 = Body(p5H, p5W, 40, 500, 100, 2, 2)
+planet6 = Body(p6H, p6W, 50, 450, 350, 2, 1)
 
-bodies = {planet1, planet2}#, planet3, planet4, planet5, planet6}
+bodies = {planet1, planet2, planet3, planet4, planet5, planet6}
 
 collision = False
 
@@ -222,9 +222,21 @@ def main():
                                 else:
                                     bodies.remove(body)
                                 '''
+            
+            # for body in bodies:
+            #     for body1 in bodies:
+            #         if(body!=body1):
+            #             body.acceleration(body1)
+            #             planet2.px = 450
+            #             planet2.py= 250
 
-
-            planet1.acceleration(planet2)  
+            # planet1.acceleration(planet2)  
+            # planet3.acceleration(planet2)  
+            # planet4.acceleration(planet2)  
+            planet5.acceleration(planet2)  
+            # planet6.acceleration(planet2) 
+            # planet2.px = 450
+            # planet2.py= 250 
             '''
                 planetTop = planet.py - planet.radius
                 planetBottom = planet.py + planet.radius
