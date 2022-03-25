@@ -18,6 +18,9 @@ bg = pygame.transform.scale(bg, (WIDTH, HEIGHT))
 home = pygame.image.load("home.png").convert()
 home = pygame.transform.scale(home, (WIDTH, HEIGHT))
 
+blankHome = pygame.image.load("blank.jpg").convert()
+blankHome = pygame.transform.scale(blankHome, (WIDTH, HEIGHT))
+
 instructions1 = pygame.image.load("instructions1.png").convert()
 instructions1 = pygame.transform.scale(instructions1, (WIDTH, HEIGHT))
 
@@ -74,12 +77,12 @@ pygame.display.set_caption("Gravity Simulator")
 FPS=60
 
 #Bodies
-planet1 = Body(p1H, p1W, 10, 500, 250, 2, 2)
+planet1 = Body(p1H, p1W, 10, 800, 250, 4, 4)
 planet2 = Body(p2H, p2W, 10000, 450, 250)
-planet3 = Body(p3H, p3W, 20, 400, 300, 1, 1)
-planet4 = Body(p4H, p4W, 30, 400, 350, 1, 2)
+planet3 = Body(p3H, p3W, 20, 300, 300, 1, 1)
+planet4 = Body(p4H, p4W, 30, 350, 350, 1, 2)
 planet5 = Body(p5H, p5W, 40, 500, 100, 2, 2)
-planet6 = Body(p6H, p6W, 50, 450, 350, 2, 1)
+planet6 = Body(p6H, p6W, 50, 450, 50, 2, 1)
 
 bodies = {planet1, planet2, planet3, planet4, planet5, planet6}
 
@@ -131,7 +134,7 @@ def main():
         clock.tick(FPS)
 
         if state == 0: #planet intro
-            pass
+            screen.blit(blankHome, [0,0])
 
         if state ==1: #home screen
             screen.blit(home, [0,0])
@@ -181,6 +184,7 @@ def main():
                     handIsOpen = False
                     #circleC = (255, 0, 0)
 
+                # update hitbox
                 handTop = circleY - circleZ
                 handBottom = circleY + circleZ
                 handLeft = circleX - circleZ
@@ -197,6 +201,7 @@ def main():
                         collision = True
                         circleC = (0, 255, 0)
 
+                        # if hand is closed, then make planet stick to hand
                         if not handIsOpen:
                             hold = True
                             circleC = (0, 0, 255)
@@ -223,20 +228,37 @@ def main():
                                     bodies.remove(body)
                                 '''
             
-            # for body in bodies:
-            #     for body1 in bodies:
-            #         if(body!=body1):
-            #             body.acceleration(body1)
-            #             planet2.px = 450
-            #             planet2.py= 250
+            for body in bodies:
+                for body1 in bodies:
+                    if(body!=body1):
+                        savex =planet2.px
+                        savey = planet2.py
+                        body.gravity(body1)
+                        planet2.px = savex
+                        planet2.py= savey 
 
-            # planet1.acceleration(planet2)  
+            # TODO- DELETE ME- IM A TEST
+            # planet1.acceleration(planet2)
+            #planet2.gravity(planet1)
+            #planet2.gravity(planet3)
+
+            #planet1.gravity(planet2)  
+            #planet2.gravity(planet1)  
             # planet3.acceleration(planet2)  
             # planet4.acceleration(planet2)  
-            planet5.acceleration(planet2)  
+            # planet5.acceleration(planet2)  
             # planet6.acceleration(planet2) 
             # planet2.px = 450
             # planet2.py= 250 
+            print(planet1.px)
+
+            #planet2.gravity(planet1)
+            # for body in bodies:
+            #     for body1 in bodies:
+            #         if(body!=body1):
+            #             body.gravity(body1)
+            #             planet2.px = 450
+            #             planet2.py= 250
             '''
                 planetTop = planet.py - planet.radius
                 planetBottom = planet.py + planet.radius
@@ -303,10 +325,11 @@ def main():
 
         if state==6:
             #planet1.render(WINDOW)
-            screen.blit(p1, (planet1.px, planet1.py))
+            
             #planet1.move()
             #planet2.render(WINDOW)
             screen.blit(p2, (planet2.px, planet2.py))
+            screen.blit(p1, (planet1.px, planet1.py))
             #planet2.move()
             screen.blit(p3, (planet3.px, planet3.py))
             screen.blit(p4, (planet4.px, planet4.py))

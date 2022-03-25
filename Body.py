@@ -142,6 +142,21 @@ class Body:
         body2.px = body2.px + body2.vx
         body2.py = body2.py + body2.vy
         reverse = 1'''
+    
+    def gravity(self, body2):
+        dx = body2.px - self.px # change in two x-positions
+        dy = body2.py- self.py # change in two y-positions
+        d = math.sqrt(dx**2 + dy**2)
+
+       
+        
+        if d != 0:
+            body2.vx = body2.vx - (body2.mass)*(dx / d**2)
+            body2.vy = body2.vy - (body2.mass)*(dy / d**2) 
+            print(body2.vx)
+
+        body2.px += body2.vx
+        body2.py += body2.vy 
 
 
     
