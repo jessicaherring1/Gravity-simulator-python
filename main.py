@@ -1,9 +1,11 @@
+from time import time
 import cv2
 from cv2 import circle
 import pygame
 from Body import Body
 from HandDetector import HandDetector
 import math
+import time
 
 #surfaces/window/screeens stuff
 WIDTH = 1092 #window width
@@ -77,12 +79,12 @@ pygame.display.set_caption("Gravity Simulator")
 FPS=60
 
 #Bodies
-planet1 = Body(p1H, p1W, 10, 800, 250, 4, 4)
+planet1 = Body(p1H, p1W, 10, 500, 250, 5, 5)
 planet2 = Body(p2H, p2W, 10000, 450, 250)
-planet3 = Body(p3H, p3W, 20, 300, 300, 1, 1)
-planet4 = Body(p4H, p4W, 30, 350, 350, 1, 2)
-planet5 = Body(p5H, p5W, 40, 500, 100, 2, 2)
-planet6 = Body(p6H, p6W, 50, 450, 50, 2, 1)
+planet3 = Body(p3H, p3W, 20, 300, 300, 5, 5)
+planet4 = Body(p4H, p4W, 30, 350, 350, 3, 5)
+planet5 = Body(p5H, p5W, 40, 500, 100, 5, 3)
+planet6 = Body(p6H, p6W, 50, 600, 50, 4, 5)
 
 bodies = {planet1, planet2, planet3, planet4, planet5, planet6}
 
@@ -100,22 +102,22 @@ def mapToNewRange(val, inputMin, inputMax, outputMin, outputMax):
 # main func 
 ###################
 def main():
+    # timer stuff
     clock = pygame.time.Clock()
+    timePassed = 0
+
+    # hand detector garbage
     handDetector = HandDetector()
 
     #state/switch mode
-    state = 6
+    state = 0
 
     #timers
-    startTime0 = pygame.time.get_ticks()
-    startTime1 = pygame.time.get_ticks()
-    startTime2 = pygame.time.get_ticks()
-    startTime3 = pygame.time.get_ticks()
-    startTime4 = pygame.time.get_ticks()
-    startTime5 = pygame.time.get_ticks()
+    endTime = pygame.time.get_ticks()
+
     endTime = 0
-    interval = 1500
-    interval2 = 2000
+    interval = 3000
+    interval2 = 4000
 
     # make a boolean that represents whether the game should continue to run or not
     running = True
@@ -129,6 +131,8 @@ def main():
     handIsOpen=True
     handIsClosed=False
 
+    endTime = pygame.time.get_ticks()
+
     # while the game is running
     while not handDetector.shouldClose and running:
         # this makes it so this function can run at most FPS times/sec
@@ -138,15 +142,19 @@ def main():
 
         if state == 0: #blank intro
             screen.blit(blankHome, [0,0])
+            pygame.display.update()
+            
             
 
         if state ==1: #home screen
             screen.blit(home, [0,0])
             if len(handDetector.landmarkDictionary) > 0:
                 if (handDetector.landmarkDictionary[0][12][1]) <(handDetector.landmarkDictionary[0][9][1]):
-                    handIsWaving = True
+                    handIsOpen = True
                 else:
-                    handIsWaving = False
+                    handIsOpen = False
+            else:
+                handIsOpen = False
 
         if state == 2: # instructions 1
             screen.blit(instructions1, [0,0])
@@ -219,7 +227,7 @@ def main():
 
                     else:
                         #planet1.acceleration(planet2)  #fix
-                        print(planet1.px)
+                        #print(planet1.px)
                         circleC = (0, 255, 255)
                     
                     for body2 in bodies:
@@ -237,14 +245,22 @@ def main():
                                     bodies.remove(body)
                                 '''
             
+            # for body in bodies:
+            #     for body1 in bodies:
+            #         if(body!=body1):
+            #             savex =planet2.px
+            #             savey = planet2.py
+            #             body.gravity(body1)
+            #             planet2.px = savex
+            #             planet2.py= savey 
+
             for body in bodies:
-                for body1 in bodies:
-                    if(body!=body1):
-                        savex =planet2.px
-                        savey = planet2.py
-                        body.gravity(body1)
-                        planet2.px = savex
-                        planet2.py= savey 
+                    if(body!=planet2):
+                        # savex =planet2.px
+                        # savey = planet2.py
+                        planet2.gravity(body)
+                        # planet2.px = savex
+                        # planet2.py= savey 
 
             # TODO- DELETE ME- IM A TEST
             # planet1.acceleration(planet2)
@@ -298,48 +314,65 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                running = False 
-        
+
+        timePassed += clock.tick()
+
+        # planet
         if state == 0:
-            endTime = pygame.time.get_ticks()
-            if endTime - startTime0 >= interval:
+            # endTime += pygame.time.get_ticks()
+            timePassed += clock.tick()
+            if timePassed >= 10:
+                #print("test")
                 state = 1
-                startTime0 = pygame.time.get_ticks()
+                # endTime = 0
+                handIsOpen = False
+                # time.sleep(2)
+                timePassed = 0
+        # welcome
+        if state == 1:
+            if handIsOpen:
+                # endTime += pygame.time.get_ticks()
+                if timePassed >= 10:
+                    state = 2
+                    handIsOpen = False
+                    timePassed = 0
+                # time.sleep(2)
 
-        if state ==1:
-            if handIsWaving:
-                endTime = pygame.time.get_ticks()
-                if endTime - startTime1 >= interval2:
-                    state = 3
-                    startTime1 = pygame.time.get_ticks()
-
-
+        # red box open hand
         if state == 2:
             if handIsOpen:
-                endTime = pygame.time.get_ticks()
-                if endTime - startTime2 >= interval:
+                # endTime = pygame.time.get_ticks()
+                if timePassed >= 10:
+                # print("timer started")
+                # time.sleep(2)
+                # print("timer ended")
                     state = 3
-                    startTime2 = pygame.time.get_ticks()
-
+                    handIsOpen = False
+                    timePassed = 0
+                
+        # green box open hand
         if state == 3:
-            endTime = pygame.time.get_ticks()
-            if endTime - startTime3 >= interval:
+            if timePassed  >= 10:
                 state = 4
-                startTime3 = pygame.time.get_ticks()
+                timePassed = 0
             
+        # red box closed hand
+        if state == 4:
+            if handIsClosed:
+                
+                if timePassed >= 10:
+                    state = 5
+                    startTime4 = pygame.time.get_ticks()
+                    handIsOpen = False
+                    timePassed = 0
 
-        if state ==4 and handIsClosed:
-            endTime = pygame.time.get_ticks()
-            if endTime - startTime4 >= interval:
-                state = 5
-                startTime4 = pygame.time.get_ticks()
-        
+        # green box closed hand
         if state == 5:
-            endTime = pygame.time.get_ticks()
-            if endTime - startTime5 >= interval:
+            if timePassed >= 10:
+                timePassed = 0
                 state = 6
-                startTime5 = pygame.time.get_ticks()
         
-
+        # game
         if state==6:
             screen.blit(p2, (planet2.px, planet2.py))
             screen.blit(p1, (planet1.px, planet1.py))
