@@ -66,9 +66,9 @@ p6H = p6.get_height()
 p6W = p6.get_width()
 
 #user hand
-openHand = pygame.image.load("openHand.JPG").convert_alpha()
+openHand = pygame.image.load("openHand.png").convert_alpha()
 openHand = pygame.transform.scale(openHand, (50, 50))
-closedHand = pygame.image.load("closedHand.JPG").convert_alpha()
+closedHand = pygame.image.load("closedHand.png").convert_alpha()
 closedHand = pygame.transform.scale(closedHand, (50, 50))
 
 
@@ -89,9 +89,6 @@ bodies = {planet1, planet2, planet3, planet4, planet5, planet6}
 collision = False
 
 
-
-
-
 ####################
 # function defs
 ####################
@@ -110,9 +107,15 @@ def main():
     state = 6
 
     #timers
-    startTime = pygame.time.get_ticks()
+    startTime0 = pygame.time.get_ticks()
+    startTime1 = pygame.time.get_ticks()
+    startTime2 = pygame.time.get_ticks()
+    startTime3 = pygame.time.get_ticks()
+    startTime4 = pygame.time.get_ticks()
+    startTime5 = pygame.time.get_ticks()
     endTime = 0
-    interval = 1000
+    interval = 1500
+    interval2 = 2000
 
     # make a boolean that represents whether the game should continue to run or not
     running = True
@@ -133,11 +136,17 @@ def main():
 
         clock.tick(FPS)
 
-        if state == 0: #planet intro
+        if state == 0: #blank intro
             screen.blit(blankHome, [0,0])
+            
 
         if state ==1: #home screen
             screen.blit(home, [0,0])
+            if len(handDetector.landmarkDictionary) > 0:
+                if (handDetector.landmarkDictionary[0][12][1]) <(handDetector.landmarkDictionary[0][9][1]):
+                    handIsWaving = True
+                else:
+                    handIsWaving = False
 
         if state == 2: # instructions 1
             screen.blit(instructions1, [0,0])
@@ -242,17 +251,6 @@ def main():
             #planet2.gravity(planet1)
             #planet2.gravity(planet3)
 
-            #planet1.gravity(planet2)  
-            #planet2.gravity(planet1)  
-            # planet3.acceleration(planet2)  
-            # planet4.acceleration(planet2)  
-            # planet5.acceleration(planet2)  
-            # planet6.acceleration(planet2) 
-            # planet2.px = 450
-            # planet2.py= 250 
-            print(planet1.px)
-
-            #planet2.gravity(planet1)
             # for body in bodies:
             #     for body1 in bodies:
             #         if(body!=body1):
@@ -301,36 +299,50 @@ def main():
             if event.type == pygame.QUIT:
                running = False 
         
-        
+        if state == 0:
+            endTime = pygame.time.get_ticks()
+            if endTime - startTime0 >= interval:
+                state = 1
+                startTime0 = pygame.time.get_ticks()
+
+        if state ==1:
+            if handIsWaving:
+                endTime = pygame.time.get_ticks()
+                if endTime - startTime1 >= interval2:
+                    state = 3
+                    startTime1 = pygame.time.get_ticks()
+
+
         if state == 2:
             if handIsOpen:
-                #delay
-                state = 3
+                endTime = pygame.time.get_ticks()
+                if endTime - startTime2 >= interval:
+                    state = 3
+                    startTime2 = pygame.time.get_ticks()
 
         if state == 3:
             endTime = pygame.time.get_ticks()
-            if endTime - startTime >= interval:
+            if endTime - startTime3 >= interval:
                 state = 4
-                startTime = pygame.time.get_ticks()
+                startTime3 = pygame.time.get_ticks()
             
 
         if state ==4 and handIsClosed:
-            state = 5
+            endTime = pygame.time.get_ticks()
+            if endTime - startTime4 >= interval:
+                state = 5
+                startTime4 = pygame.time.get_ticks()
         
         if state == 5:
             endTime = pygame.time.get_ticks()
-            if endTime - startTime >= interval:
+            if endTime - startTime5 >= interval:
                 state = 6
+                startTime5 = pygame.time.get_ticks()
         
 
         if state==6:
-            #planet1.render(WINDOW)
-            
-            #planet1.move()
-            #planet2.render(WINDOW)
             screen.blit(p2, (planet2.px, planet2.py))
             screen.blit(p1, (planet1.px, planet1.py))
-            #planet2.move()
             screen.blit(p3, (planet3.px, planet3.py))
             screen.blit(p4, (planet4.px, planet4.py))
             screen.blit(p5, (planet5.px, planet5.py))
@@ -342,9 +354,6 @@ def main():
                     screen.blit(closedHand, (circleX, circleY))
             else:
                 screen.blit(openHand, (circleX, circleY))
-
-            
-            #pygame.draw.circle(WINDOW, circleC, (circleX, circleY), circleZ)
         
         # this gets a list of booleans showing which keys are currently pressed
         keysPressed = pygame.key.get_pressed()
